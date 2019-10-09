@@ -2,7 +2,7 @@
 
 public class PrimeGenerator
 {
-  private static bool[] f;
+  private static bool[] isCrossed;
   private static int[] result;
 
   ///<summary>
@@ -32,45 +32,56 @@ public class PrimeGenerator
 
     // 有多少個質數?
     int count = 0;
-    for (i = 0; i < f.Length; i++)
+    for (i = 2; i < isCrossed.Length; i++)
     {
-      if (f[i])
+      if (NotCrossed(i))
         count++;
     }
 
     result = new int[count];
 
     // 把質數轉移到結果陣列中
-    for (i = 0, j = 0; i < f.Length; i++)
+    for (i = 2, j = 0; i < isCrossed.Length; i++)
     {
-      if (f[i]) // 質數
+      if (NotCrossed(i)) // 質數
         result[j++] = i;
     }
   }
 
   private static void CrossOutMultiples()
   {
-    int i;
-    int j;
-
-    for (i = 2; i < Math.Sqrt(f.Length); i++)
+    int maxPrimeFactor = CalcMaxPrimeFactor();
+    for (int i = 2; i < maxPrimeFactor + 1; i++)
     {
-      if (f[i]) // 如果未被劃掉，就劃掉其倍數
-      {
-        for (j = 2 * i; j < f.Length; j += i)
-          f[j] = false; // 倍數不是質數
-      }
+      if (NotCrossed(i)) // 如果未被劃掉，就劃掉其倍數
+        CrossOutMultiplesOf(i);
     }
+  }
+
+  private static int CalcMaxPrimeFactor()
+  {
+    double maxPrimeFactor = Math.Sqrt(isCrossed.Length) + 1;
+    return (int)maxPrimeFactor;
+  }
+
+  private static void CrossOutMultiplesOf(int i)
+  {
+    for (int multiple = 2 * i; multiple < isCrossed.Length; multiple += i)
+    {
+      isCrossed[multiple] = true;
+    }
+  }
+
+  private static bool NotCrossed(int i)
+  {
+    return isCrossed[i] == false;
   }
 
   private static void InitializeArrayOfIntegers(int maxValue)
   {
     // 宣告
-    f = new bool[maxValue + 1];
-    f[0] = f[1] = false; // 非質數，也非倍數
-
-    // 將陣列元素初始化為true.
-    for (int i = 2; i < f.Length; i++)
-      f[i] = true;
+    isCrossed = new bool[maxValue + 1];
+    for (int i = 2; i < isCrossed.Length; i++)
+      isCrossed[i] = false;
   }
 }
