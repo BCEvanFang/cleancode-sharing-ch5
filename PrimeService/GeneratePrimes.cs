@@ -2,9 +2,8 @@
 
 public class PrimeGenerator
 {
-  private static int s;
   private static bool[] f;
-  private static int[] primes;
+  private static int[] result;
 
   ///<summary>
   ///產生一個包含質數的陣列
@@ -19,63 +18,59 @@ public class PrimeGenerator
     }
     else
     {
-      InitializeSieve(maxValue);
-      Sieve();
-      LoadPrimes();
-      return primes;
+      InitializeArrayOfIntegers(maxValue);
+      CrossOutMultiples();
+      PutUncrossedIntegersIntoResult();
+      return result;
     }
   }
 
-  private static void LoadPrimes()
+  private static void PutUncrossedIntegersIntoResult()
   {
     int i;
     int j;
 
     // 有多少個質數?
     int count = 0;
-    for (i = 0; i < s; i++)
+    for (i = 0; i < f.Length; i++)
     {
       if (f[i])
         count++;
     }
 
-    primes = new int[count];
+    result = new int[count];
 
     // 把質數轉移到結果陣列中
-    for (i = 0, j = 0; i < s; i++)
+    for (i = 0, j = 0; i < f.Length; i++)
     {
       if (f[i]) // 質數
-        primes[j++] = i;
+        result[j++] = i;
     }
   }
 
-  private static void Sieve()
+  private static void CrossOutMultiples()
   {
     int i;
     int j;
 
-    for (i = 2; i < Math.Sqrt(s) + 1; i++)
+    for (i = 2; i < Math.Sqrt(f.Length); i++)
     {
       if (f[i]) // 如果未被劃掉，就劃掉其倍數
       {
-        for (j = 2 * i; j < s; j += i)
+        for (j = 2 * i; j < f.Length; j += i)
           f[j] = false; // 倍數不是質數
       }
     }
   }
 
-  private static void InitializeSieve(int maxValue)
+  private static void InitializeArrayOfIntegers(int maxValue)
   {
     // 宣告
-    s = maxValue + 1; // 陣列大小
-    f = new bool[s];
-    int i;
+    f = new bool[maxValue + 1];
+    f[0] = f[1] = false; // 非質數，也非倍數
 
     // 將陣列元素初始化為true.
-    for (i = 0; i < s; i++)
+    for (int i = 2; i < f.Length; i++)
       f[i] = true;
-
-    // 去掉已知的非質數
-    f[0] = f[1] = false;
   }
 }
