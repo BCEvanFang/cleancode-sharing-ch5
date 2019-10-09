@@ -27,25 +27,25 @@ public class PrimeGenerator
 
   private static void PutUncrossedIntegersIntoResult()
   {
-    int i;
-    int j;
-
-    // 有多少個質數?
-    int count = 0;
-    for (i = 2; i < isCrossed.Length; i++)
-    {
-      if (NotCrossed(i))
-        count++;
-    }
-
-    result = new int[count];
+    result = new int[NumberOfUncrossedIntegers()];
 
     // 把質數轉移到結果陣列中
-    for (i = 2, j = 0; i < isCrossed.Length; i++)
+    for (int i = 2, j = 0; i < isCrossed.Length; i++)
     {
       if (NotCrossed(i)) // 質數
         result[j++] = i;
     }
+  }
+
+  private static int NumberOfUncrossedIntegers()
+  {
+    int count = 0;
+    for (int i = 2; i < isCrossed.Length; i++)
+    {
+      if (NotCrossed(i))
+        count++;
+    }
+    return count;
   }
 
   private static void CrossOutMultiples()
