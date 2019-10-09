@@ -2,7 +2,7 @@
 
 public class PrimeGenerator
 {
-  private static bool[] isCrossed;
+  private static bool[] crossedOut;
   private static int[] result;
 
   ///<summary>
@@ -18,7 +18,7 @@ public class PrimeGenerator
     }
     else
     {
-      InitializeArrayOfIntegers(maxValue);
+      UncrossIntegerUpTo(maxValue);
       CrossOutMultiples();
       PutUncrossedIntegersIntoResult();
       return result;
@@ -30,7 +30,7 @@ public class PrimeGenerator
     result = new int[NumberOfUncrossedIntegers()];
 
     // 把質數轉移到結果陣列中
-    for (int i = 2, j = 0; i < isCrossed.Length; i++)
+    for (int i = 2, j = 0; i < crossedOut.Length; i++)
     {
       if (NotCrossed(i)) // 質數
         result[j++] = i;
@@ -40,7 +40,7 @@ public class PrimeGenerator
   private static int NumberOfUncrossedIntegers()
   {
     int count = 0;
-    for (int i = 2; i < isCrossed.Length; i++)
+    for (int i = 2; i < crossedOut.Length; i++)
     {
       if (NotCrossed(i))
         count++;
@@ -50,7 +50,7 @@ public class PrimeGenerator
 
   private static void CrossOutMultiples()
   {
-    int maxPrimeFactor = CalcMaxPrimeFactor();
+    int maxPrimeFactor = DetermineIterationLimit();
     for (int i = 2; i < maxPrimeFactor + 1; i++)
     {
       if (NotCrossed(i)) // 如果未被劃掉，就劃掉其倍數
@@ -58,30 +58,30 @@ public class PrimeGenerator
     }
   }
 
-  private static int CalcMaxPrimeFactor()
+  private static int DetermineIterationLimit()
   {
-    double maxPrimeFactor = Math.Sqrt(isCrossed.Length) + 1;
-    return (int)maxPrimeFactor;
+    double iterationLimit = Math.Sqrt(crossedOut.Length);
+    return (int)iterationLimit;
   }
 
   private static void CrossOutMultiplesOf(int i)
   {
-    for (int multiple = 2 * i; multiple < isCrossed.Length; multiple += i)
+    for (int multiple = 2 * i; multiple < crossedOut.Length; multiple += i)
     {
-      isCrossed[multiple] = true;
+      crossedOut[multiple] = true;
     }
   }
 
   private static bool NotCrossed(int i)
   {
-    return isCrossed[i] == false;
+    return crossedOut[i] == false;
   }
 
-  private static void InitializeArrayOfIntegers(int maxValue)
+  private static void UncrossIntegerUpTo(int maxValue)
   {
     // 宣告
-    isCrossed = new bool[maxValue + 1];
-    for (int i = 2; i < isCrossed.Length; i++)
-      isCrossed[i] = false;
+    crossedOut = new bool[maxValue + 1];
+    for (int i = 2; i < crossedOut.Length; i++)
+      crossedOut[i] = false;
   }
 }
